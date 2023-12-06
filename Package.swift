@@ -23,12 +23,14 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-format.git",
             .upToNextMajor(from: "509.0.0")),
-        .package(url: "https://github.com/pointfreeco/swift-parsing", .upToNextMajor(from: "0.13.0")),
+        .package(
+            url: "https://github.com/pointfreeco/swift-parsing",
+            .upToNextMajor(from: "0.13.0")),
     ],
     targets: [
         .executableTarget(
             name: "AdventOfCode",
-            dependencies: dependencies,
+            dependencies: [.product(name: "Parsing", package: "swift-parsing")] + dependencies,
             resources: [.copy("Data")],
             swiftSettings: [.enableUpcomingFeature("BareSlashRegexLiterals")]
         ),

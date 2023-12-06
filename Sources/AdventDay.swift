@@ -65,8 +65,15 @@ extension AdventDay {
       fatalError("Couldn't find file '\(dataFilename).txt' in the 'Data' directory.")
     }
 
-    // On Windows, line separators may be CRLF. Converting to LF so that \n 
+    // On Windows, line separators may be CRLF. Converting to LF so that \n
     // works for string parsing.
     return data.replacingOccurrences(of: "\r", with: "")
+  }
+}
+
+extension Collection {
+  /// Returns the element at the specified index if it is within bounds, otherwise nil.
+  subscript(safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
   }
 }
