@@ -7,30 +7,25 @@ import XCTest
 final class Day03Tests: XCTestCase {
   // Smoke test data provided in the challenge question
   let testData = """
-    1000
-    2000
-    3000
-
-    4000
-
-    5000
-    6000
-
-    7000
-    8000
-    9000
-
-    10000
-
+    467..114..
+    ...*......
+    ..35..633.
+    ......#...
+    617*......
+    .....+.58.
+    ..592.....
+    ......755.
+    ...$.*....
+    .664.598..
     """
 
   func testPart1() throws {
-    let challenge = Day00(data: testData)
-    XCTAssertEqual(String(describing: challenge.part1()), "6000")
+    let challenge = Day03(data: testData)
+    XCTAssertEqual(String(describing: challenge.part1()), "4361")
   }
 
   func testPart2() throws {
-    let challenge = Day00(data: testData)
-    XCTAssertEqual(String(describing: challenge.part2()), "32000")
+    let challenge = Day03(data: testData)
+    XCTAssertEqual(String(describing: challenge.part2()), "4361")
   }
 }
