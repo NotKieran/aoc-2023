@@ -21,7 +21,6 @@ struct Day03: AdventDay {
           lineBelow: entities[safe: index + 1] ?? []))
     }
     let validPartNumbers = partNumbers.filter({ $0.isValid }).map({ $0.number })
-//    assert(!badAnswers.contains(validPartNumbers.reduce(0, +)))
       print(validPartNumbers)
     return validPartNumbers.reduce(0, +)
   }
