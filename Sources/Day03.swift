@@ -1,8 +1,8 @@
 import Algorithms
 
 struct CoOrd: Equatable, Hashable {
-    let x: Int
-    let y: Int
+  let x: Int
+  let y: Int
 }
 
 struct Day03: AdventDay {
@@ -26,30 +26,30 @@ struct Day03: AdventDay {
           lineBelow: entities[safe: index + 1] ?? []))
     }
     let validPartNumbers = partNumbers.filter({ $0.isValid }).map({ $0.number })
-      print(validPartNumbers)
+    print(validPartNumbers)
     return validPartNumbers.reduce(0, +)
   }
 
   func part2() -> Any {
-      var gearedParts: [GearedPart] = []
-      for (index, line) in entities.enumerated() {
-          gearedParts.append(
-          contentsOf: findGearsWithPosition(
-            line: line, lineAbove: entities[safe: index - 1] ?? [],
-            lineBelow: entities[safe: index + 1] ?? [], lineY: index))
-      }
-      
-      let validGearLocations = getValidGearLocations(gearedParts: gearedParts)
-      
-      var ratios: [Int] = []
-      
-      validGearLocations.forEach({ gearLocation in
-          let parts = gearedParts.filter({ $0.gearLocation == gearLocation}).map({$0.number})
-          ratios.append(parts.reduce(1) { $0 * $1 })
-      })
-    
-      print(ratios)
-      return ratios.reduce(0, +)
+    var gearedParts: [GearedPart] = []
+    for (index, line) in entities.enumerated() {
+      gearedParts.append(
+        contentsOf: findGearsWithPosition(
+          line: line, lineAbove: entities[safe: index - 1] ?? [],
+          lineBelow: entities[safe: index + 1] ?? [], lineY: index))
+    }
+
+    let validGearLocations = getValidGearLocations(gearedParts: gearedParts)
+
+    var ratios: [Int] = []
+
+    validGearLocations.forEach({ gearLocation in
+      let parts = gearedParts.filter({ $0.gearLocation == gearLocation }).map({ $0.number })
+      ratios.append(parts.reduce(1) { $0 * $1 })
+    })
+
+    print(ratios)
+    return ratios.reduce(0, +)
   }
 }
 
@@ -59,48 +59,51 @@ struct PartNumber {
 }
 
 struct GearedPart {
-    let number: Int
-    let gearLocation: CoOrd
+  let number: Int
+  let gearLocation: CoOrd
 }
 
 extension Day03 {
-    
-    func findGearsWithPosition(line: [Character], lineAbove: [Character], lineBelow: [Character], lineY: Int)
-      -> [GearedPart]
-    {
-      var foundNumbers: [GearedPart] = []
-      var currentNumber: String? = nil
-        var currentGearLocation: CoOrd? = nil
 
-      for (index, char) in line.enumerated() {
-          
-          if char.isNumber {
-            if currentNumber == nil {
-              currentNumber = ""
-            }
-            if currentGearLocation == nil {
-                currentGearLocation = areAnyGearsAdjacent(
-                line: line, lineAbove: lineAbove, lineBelow: lineBelow, position: index, lineY: lineY)
-            }
-            currentNumber?.append(char)
-          }
-          
-          if isNotANumber(char) || index == line.endIndex - 1,
-          let unwrappedCurrentNumber = currentNumber
-        {
-          let intOfCurrent = Int(unwrappedCurrentNumber)!
+  func findGearsWithPosition(
+    line: [Character], lineAbove: [Character], lineBelow: [Character], lineY: Int
+  )
+    -> [GearedPart]
+  {
+    var foundNumbers: [GearedPart] = []
+    var currentNumber: String? = nil
+    var currentGearLocation: CoOrd? = nil
 
-              if let unwrappedCurrentGearLocation = currentGearLocation {
-                  foundNumbers.append(GearedPart(number: intOfCurrent, gearLocation: unwrappedCurrentGearLocation))
-              }
+    for (index, char) in line.enumerated() {
 
-          currentNumber = nil
-              currentGearLocation = nil
+      if char.isNumber {
+        if currentNumber == nil {
+          currentNumber = ""
         }
+        if currentGearLocation == nil {
+          currentGearLocation = areAnyGearsAdjacent(
+            line: line, lineAbove: lineAbove, lineBelow: lineBelow, position: index, lineY: lineY)
+        }
+        currentNumber?.append(char)
       }
-      return foundNumbers
+
+      if isNotANumber(char) || index == line.endIndex - 1,
+        let unwrappedCurrentNumber = currentNumber
+      {
+        let intOfCurrent = Int(unwrappedCurrentNumber)!
+
+        if let unwrappedCurrentGearLocation = currentGearLocation {
+          foundNumbers.append(
+            GearedPart(number: intOfCurrent, gearLocation: unwrappedCurrentGearLocation))
+        }
+
+        currentNumber = nil
+        currentGearLocation = nil
+      }
     }
-    
+    return foundNumbers
+  }
+
   func findNumbersWithPosition(line: [Character], lineAbove: [Character], lineBelow: [Character])
     -> [PartNumber]
   {
@@ -109,19 +112,19 @@ extension Day03 {
     var currentIsValid = false
 
     for (index, char) in line.enumerated() {
-        
-        if char.isNumber {
-          if currentNumber == nil {
-            currentNumber = ""
-          }
-          if !currentIsValid {
-            currentIsValid = areAnySymbolsAdjacent(
-              line: line, lineAbove: lineAbove, lineBelow: lineBelow, position: index)
-          }
-          currentNumber?.append(char)
+
+      if char.isNumber {
+        if currentNumber == nil {
+          currentNumber = ""
         }
-        
-        if isNotANumber(char) || index == line.endIndex - 1,
+        if !currentIsValid {
+          currentIsValid = areAnySymbolsAdjacent(
+            line: line, lineAbove: lineAbove, lineBelow: lineBelow, position: index)
+        }
+        currentNumber?.append(char)
+      }
+
+      if isNotANumber(char) || index == line.endIndex - 1,
         let unwrappedCurrent = currentNumber
       {
         let intOfCurrent = Int(unwrappedCurrent)!
@@ -134,10 +137,10 @@ extension Day03 {
 
     return foundNumbers
   }
-    
-    func isNotANumber(_ char: Character) -> Bool {
-        !"0123456789".contains(char)
-    }
+
+  func isNotANumber(_ char: Character) -> Bool {
+    !"0123456789".contains(char)
+  }
 
   func areAnySymbolsAdjacent(
     line: [Character], lineAbove: [Character], lineBelow: [Character], position: Int
@@ -156,43 +159,43 @@ extension Day03 {
     }
     return false
   }
-    
-    func areAnyGearsAdjacent(
-        line: [Character], lineAbove: [Character], lineBelow: [Character], position: Int, lineY: Int
-    ) -> CoOrd? {
-      for i in position - 1...position + 1 {
-        if isGear(lineAbove[safe: i] ?? ".") {
-            return CoOrd(x:i,y:lineY - 2)
-        }
-        if isGear(line[safe: i] ?? ".") {
-            return CoOrd(x:i,y:lineY - 1)
-        }
-        if isGear(lineBelow[safe: i] ?? ".") {
-            return CoOrd(x:i,y:lineY)
-        }
+
+  func areAnyGearsAdjacent(
+    line: [Character], lineAbove: [Character], lineBelow: [Character], position: Int, lineY: Int
+  ) -> CoOrd? {
+    for i in position - 1...position + 1 {
+      if isGear(lineAbove[safe: i] ?? ".") {
+        return CoOrd(x: i, y: lineY - 2)
       }
-      return nil
+      if isGear(line[safe: i] ?? ".") {
+        return CoOrd(x: i, y: lineY - 1)
+      }
+      if isGear(lineBelow[safe: i] ?? ".") {
+        return CoOrd(x: i, y: lineY)
+      }
     }
+    return nil
+  }
 
   func isDigitOrDot(_ char: Character) -> Bool {
     return ".0123456789".contains(char)
   }
-    
-    func isGear(_ char: Character) -> Bool {
-      return "*".contains(char)
-    }
-    
-    func getValidGearLocations(gearedParts: [GearedPart]) -> [CoOrd] {
-        var gears: [CoOrd: Int] = [:]
-        
-        gearedParts.forEach({ part in
-            if let partCount = gears[part.gearLocation] {
-                gears[part.gearLocation] = partCount + 1
-            } else {
-                gears[part.gearLocation] = 1
-            }
-        })
-        
-        return gears.filter({$0.value == 2}).map({$0.key})
-    }
+
+  func isGear(_ char: Character) -> Bool {
+    return "*".contains(char)
+  }
+
+  func getValidGearLocations(gearedParts: [GearedPart]) -> [CoOrd] {
+    var gears: [CoOrd: Int] = [:]
+
+    gearedParts.forEach({ part in
+      if let partCount = gears[part.gearLocation] {
+        gears[part.gearLocation] = partCount + 1
+      } else {
+        gears[part.gearLocation] = 1
+      }
+    })
+
+    return gears.filter({ $0.value == 2 }).map({ $0.key })
+  }
 }
