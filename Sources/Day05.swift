@@ -2,22 +2,37 @@ import Algorithms
 import Parsing
 
 
-typealias Map = [[Int]]
+struct MapLine {
+    let destination: Int;
+    let source: Int;
+    let range: Int
+}
+
+typealias Map = [MapLine]
+
+struct MapLineParser: Parser {
+    var body: some Parser<Substring,  MapLine> {
+        Parse(MapLine.init(destination:source:range:))
+        {
+            Int.parser()
+            Whitespace()
+            Int.parser()
+            Whitespace()
+            Int.parser()
+        }}
+}
 
 struct MapParser: Parser {
     var body: some Parser<Substring,  Map> {
         Many {
-            Many {
-                Int.parser()
-            } separator: {
-                Whitespace()
-            }
+            MapLineParser()
         } separator: {
             "\n"
         } terminator: {
-            "\n\n"
+            "\n"
         }
-    }}
+    }
+}
 
 struct Almanac {
     let seeds: [Int]
@@ -45,20 +60,27 @@ struct AlmanacParser: Parser {
             } terminator: {
                 "\n\n"
             }
-            "seed-to-soil map:"
+            "seed-to-soil map:\n"
             MapParser()
+            Whitespace()
             "soil-to-fertilizer map:\n"
             MapParser()
+            Whitespace()
             "fertilizer-to-water map:\n"
             MapParser()
+            Whitespace()
             "water-to-light map:\n"
             MapParser()
+            Whitespace()
             "light-to-temperature map:\n"
             MapParser()
+            Whitespace()
             "temperature-to-humidity map:\n"
             MapParser()
+            Whitespace()
             "humidity-to-location map:\n"
             MapParser()
+            Whitespace()
         }
     }
 }

@@ -26,7 +26,6 @@ struct Day03: AdventDay {
           lineBelow: entities[safe: index + 1] ?? []))
     }
     let validPartNumbers = partNumbers.filter({ $0.isValid }).map({ $0.number })
-    print(validPartNumbers)
     return validPartNumbers.reduce(0, +)
   }
 
@@ -48,7 +47,6 @@ struct Day03: AdventDay {
       ratios.append(parts.reduce(1) { $0 * $1 })
     })
 
-    print(ratios)
     return ratios.reduce(0, +)
   }
 }
