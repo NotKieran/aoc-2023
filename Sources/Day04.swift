@@ -6,13 +6,16 @@ struct ScratchCard {
     let winningNumbers: [Int]
     let numbersOnCard: [Int]
     
-    var value: Int {
+    var matchingNumbers: Int {
         let winningSet = Set(winningNumbers)
         let cardNumberSet = Set(numbersOnCard)
             
-        let commonNumbersCount = winningSet.intersection(cardNumberSet).count
-        if commonNumbersCount > 0 {
-            let order = commonNumbersCount - 1
+        return winningSet.intersection(cardNumberSet).count
+    }
+    
+    var value: Int {
+        if matchingNumbers > 0 {
+            let order = matchingNumbers - 1
             return 2 ** order
         } else {
             return 0
@@ -73,7 +76,30 @@ struct Day04: AdventDay {
       return entities.map({ $0.value}).reduce(0, +)
   }
 
+    /// 5604889 Too low
   func part2() -> Any {
-      return entities
+      typealias Id = Int
+      typealias InstanceCount = Int
+      
+      var cardInstances: [Id:InstanceCount] = [:]
+      
+      for i in 1...entities.count {
+          cardInstances[i] = 1
+      }
+      
+      for card in entities {
+          let cardCount = cardInstances[card.id]
+          
+          if card.matchingNumbers > 0 {
+              for i in 1...card.matchingNumbers {
+                  let id = i + card.id
+                  if id < entities.endIndex + 1 {
+                      cardInstances[id] = cardInstances[id]! + cardCount!
+                  }
+              }
+          }
+      }
+      
+      return cardInstances.values.reduce(0, +)
   }
 }
