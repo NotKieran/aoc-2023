@@ -6,6 +6,21 @@ struct MapLine {
     let destination: Int;
     let source: Int;
     let range: Int
+    
+    private var sourceRange: ClosedRange<Int> {
+        source...source+range
+    }
+    
+    private var destinationRange: ClosedRange<Int> {
+        destination...destination+range
+    }
+    
+    func map(number: Int) -> Int? {
+        guard sourceRange.contains(number) else {
+            return nil
+        }
+        return number + destination - source
+    }
 }
 
 typealias Map = [MapLine]
@@ -43,7 +58,63 @@ struct Almanac {
     let lightToTemp: Map
     let tempToHumid: Map
     let humidToLocation: Map
+    
+    var mapSeedsToSoil: [Int] {
+        var mapping: [Int:Int] = [:]
+        for seed in seeds {
+            mapping[seed] = seed
+            seedToSoil.forEach({ mapLine in
+                if let mappedValue = mapLine.map(number: seed) {
+                    mapping[seed] = mappedValue
+                }
+            })
+        }
+        return Array(mapping.values)
+    }
+    
+    func map(this items: [Int], from sourceMap: Map) -> [Int] {
+        var mapping: [Int:Int] = [:]
+        for thing in items {
+            mapping[thing] = thing
+            sourceMap.forEach({ mapLine in
+                if let mappedValue = mapLine.map(number: thing) {
+                    mapping[thing] = mappedValue
+                }
+            })
+        }
+        return Array(mapping.values)
+    }
+    
+    var locations: [Int] {
+        let soil = map(this: seeds, from: seedToSoil)
+        let fert = map(this: soil, from: soilToFert)
+        let water = map(this: fert, from: fertToWater)
+        let light = map(this: water, from: waterToLight)
+        let temp = map(this: light, from: lightToTemp)
+        let humid = map(this: temp, from: tempToHumid)
+        return map(this: humid, from: humidToLocation)
+    }
+    
+    var partTwoSeeds: [Int] {
+        let seedPairs = seeds.chunked(into: 2)
+        var allSeeds: [Int] = []
+        for pair in seedPairs {
+            allSeeds += Array(pair[0]..<pair[0]+pair[1])
+        }
+        return allSeeds
+    }
+    
+    var partTwoLocations: [Int] {
+        let soil = map(this: partTwoSeeds, from: seedToSoil)
+        let fert = map(this: soil, from: soilToFert)
+        let water = map(this: fert, from: fertToWater)
+        let light = map(this: water, from: waterToLight)
+        let temp = map(this: light, from: lightToTemp)
+        let humid = map(this: temp, from: tempToHumid)
+        return map(this: humid, from: humidToLocation)
+    }
 }
+
 struct AlmanacParser: Parser {
     var body: some Parser<Substring, Almanac> {
         Parse(
@@ -96,14 +167,11 @@ struct Day05: AdventDay {
     
     // Replace this with your solution for the first part of the day's challenge.
     func part1() -> Any {
-        // Calculate the sum of the first set of input data
-        print(almanac)
-        return almanac
+        return almanac.locations.min()!
     }
     
     // Replace this with your solution for the second part of the day's challenge.
     func part2() -> Any {
-        // Sum the maximum entries in each set of data
-        return almanac
+        return almanac.partTwoLocations.min()!
     }
 }
